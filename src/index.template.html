@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aymen Kamel | AI Engineer and Full-Stack Developer</title>
+<meta name="description" content="Aymen Kamel is an AI engineer and full-stack developer in Sfax, Tunisia. He builds computer vision systems for sport (YOLOv11, TrackNet, FastAPI) and co-founded HeroScore.">
+<meta name="author" content="Aymen Kamel">
+<meta name="theme-color" content="#050505">
+<link rel="canonical" href="https://aymenkamel.netlify.app/">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Aymen Kamel">
+<meta property="og:title" content="Aymen Kamel | AI Engineer and Full-Stack Developer">
+<meta property="og:description" content="Computer vision and AI for sport, shipped as real software. SmartPlayAI, HeroScore, MÉMORA and more.">
+<meta property="og:url" content="https://aymenkamel.netlify.app/">
+<meta property="og:image" content="https://aymenkamel.netlify.app/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Aymen Kamel | AI Engineer and Full-Stack Developer">
+<meta name="twitter:description" content="Computer vision and AI for sport, shipped as real software.">
+<meta name="twitter:image" content="https://aymenkamel.netlify.app/assets/og.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Aymen Kamel","url":"https://aymenkamel.netlify.app/","jobTitle":"AI Engineer and Full-Stack Developer","email":"kamelaymen793@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Sfax","addressCountry":"TN"},"alumniOf":[{"@type":"CollegeOrUniversity","name":"International Institute of Technology, Sfax"},{"@type":"CollegeOrUniversity","name":"Faculty of Sciences of Sfax"}],"knowsAbout":["Computer vision","Deep learning","YOLO","Retrieval-augmented generation","FastAPI","React"],"sameAs":["https://github.com/aymen-kamel","https://www.linkedin.com/in/aymen-kamel-b135a3301/"]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,100..900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one black stage. Giant name pinned to the top, portrait overlapping it and reacting to the pointer, then hard-ruled editorial rows below. */
+:root{
+  --bg:#050505;
+  --fg:#f3f1ec;
+  --mute:#8f8b84;
+  --line:#25231f;
+  --accent:#ff5a1f;
+  --display:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --body:'DM Sans','Helvetica Neue',Arial,sans-serif;
+  --gutter:clamp(16px,2.2vw,32px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+::selection{background:var(--accent);color:#000}
+
+/* top bar */
+.top{position:fixed;inset:0 0 auto 0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:20px var(--gutter);font:600 13px/1 var(--body);letter-spacing:.04em;text-transform:uppercase;mix-blend-mode:difference;color:#fff}
+.top a:last-child{justify-self:end}
+.top nav{display:flex;gap:22px}
+.top a:hover{opacity:.6}
+
+/* hero */
+.hero{position:relative;height:clamp(620px,100svh,880px);overflow:hidden;touch-action:pan-y}
+.mega{position:absolute;left:var(--gutter);right:var(--gutter);top:clamp(70px,13%,130px);z-index:1;font-family:var(--display);font-weight:900;font-stretch:100%;line-height:.82;letter-spacing:-.035em;white-space:nowrap;text-transform:uppercase;user-select:none}
+.mega span{display:inline-block;font-size:15vw}
+.stage{position:absolute;left:50%;bottom:-9%;z-index:2;width:clamp(340px,52vw,780px);aspect-ratio:1/1;transform:translateX(-50%);perspective:900px;cursor:grab}
+.stage.dragging{cursor:grabbing}
+.portrait{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform;touch-action:none;transform-origin:50% 100%}
+.portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;user-select:none;-webkit-user-drag:none;pointer-events:none;opacity:0}
+.portrait img.on{opacity:1}
+.portrait canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:none}
+.portrait.gl canvas{display:block}
+.portrait.gl img,.portrait.gl img.on{opacity:0}
+
+.hint{position:absolute;z-index:3;left:calc(50% + clamp(150px,19vw,290px));top:62%;display:flex;gap:12px;align-items:center;color:#cfcbc4;font-size:15px;max-width:240px}
+.hint svg{flex:none;width:38px;height:auto;stroke:#cfcbc4}
+.tagline{position:absolute;z-index:3;left:var(--gutter);bottom:var(--gutter);max-width:300px;font:600 17px/1.25 var(--body)}
+.cta{position:absolute;z-index:3;right:var(--gutter);bottom:var(--gutter);padding:16px 26px;border-radius:999px;background:var(--fg);color:#000;font:600 14px/1 var(--body);text-transform:uppercase;letter-spacing:.04em;transition:background .2s,transform .2s}
+.cta:hover{background:var(--accent);transform:translateY(-2px)}
+
+
+/* marquee */
+.marquee{border-block:1px solid var(--line);overflow:hidden;white-space:nowrap;padding:18px 0;background:var(--accent);color:#000}
+.marquee div{display:inline-flex;gap:40px;padding-right:40px;animation:slide 32s linear infinite;font:800 26px/1 var(--display);text-transform:uppercase;letter-spacing:-.01em}
+.marquee i{font-style:normal}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* sections */
+section.block{padding:clamp(64px,9vw,130px) var(--gutter)}
+.label{display:flex;justify-content:space-between;gap:20px;padding-bottom:18px;border-bottom:1px solid var(--line);font:600 13px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+h2{font:900 clamp(40px,8vw,120px)/.9 var(--display);letter-spacing:-.03em;text-transform:uppercase;text-wrap:balance;margin:clamp(28px,4vw,56px) 0}
+
+/* work */
+.row{display:grid;grid-template-columns:70px 1.2fr 1.6fr 1fr;gap:var(--gutter);align-items:baseline;padding:28px 12px;border-bottom:1px solid var(--line);transition:background .25s,color .25s,padding .25s}
+.row:hover{background:var(--fg);color:#000;padding-left:28px}
+.row .n{font:600 14px var(--body);color:var(--mute);font-variant-numeric:tabular-nums}
+.row:hover .n,.row:hover .tags{color:#3b3832}
+.row h3{font:800 clamp(26px,3.4vw,52px)/1 var(--display);letter-spacing:-.025em;text-transform:uppercase}
+.row p{color:#c8c4bc;max-width:52ch}
+.row:hover p{color:#1b1a17}
+.tags{color:var(--mute);font-size:14px;text-align:right}
+
+/* about */
+.about{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(32px,6vw,100px)}
+.about .lead{font:700 clamp(24px,2.9vw,42px)/1.15 var(--display);letter-spacing:-.02em;text-wrap:balance}
+.about .lead em{font-style:normal;color:var(--accent)}
+.facts{display:grid;gap:0;align-content:start}
+.facts div{display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid var(--line)}
+.facts dt{color:var(--mute)}
+.facts dd{text-align:right}
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gutter);margin-top:clamp(40px,6vw,80px)}
+.skill{padding:22px;border:1px solid var(--line);border-radius:18px;transition:border-color .2s,transform .2s}
+.skill:hover{border-color:var(--accent);transform:translateY(-4px)}
+.skill h4{font:800 20px/1.1 var(--display);text-transform:uppercase;margin-bottom:12px}
+.skill ul{list-style:none;color:#c8c4bc;font-size:15px;display:grid;gap:4px}
+
+/* timeline */
+.tl div{display:grid;grid-template-columns:160px 1fr;gap:var(--gutter);padding:26px 0;border-bottom:1px solid var(--line)}
+.tl time{font:700 15px var(--body);color:var(--accent)}
+.tl h3{font:800 clamp(22px,2.4vw,34px)/1.05 var(--display);text-transform:uppercase;letter-spacing:-.02em;margin-bottom:6px}
+.tl p{color:#c8c4bc;max-width:60ch}
+
+/* contact */
+.contact{text-align:left}
+.mail{display:block;font:900 5.4vw/1.05 var(--display);letter-spacing:-.04em;overflow-wrap:anywhere;transition:color .2s}
+.mail:hover{color:var(--accent)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.btn{padding:15px 24px;border-radius:999px;border:1px solid #3a3730;background:transparent;color:var(--fg);font:600 14px/1 var(--body);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.btn:hover{background:var(--fg);color:#000;border-color:var(--fg)}
+footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:28px var(--gutter);border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+
+
+/* scroll motion */
+.progress{position:fixed;left:0;top:0;z-index:40;width:100%;height:3px;background:var(--accent);transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
+.marquee.js div{animation:none;will-change:transform}
+.mega,.stage,.tagline,.hint,.cta{will-change:translate,opacity}
+
+/* project case studies */
+summary{list-style:none;cursor:pointer;display:block}
+summary::-webkit-details-marker{display:none}
+.proj[open] .row{background:var(--fg);color:#000;padding-left:28px}
+.proj[open] .row .n,.proj[open] .row .tags{color:#3b3832}
+.proj[open] .row p{color:#1b1a17}
+summary:focus-visible .row{outline:2px solid var(--accent);outline-offset:-2px}
+.panel{display:grid;gap:18px;padding:26px 12px 40px calc(70px + var(--gutter) + 12px);border-bottom:1px solid var(--line)}
+.panel ul{list-style:none;display:grid;gap:10px;max-width:66ch;color:#c8c4bc}
+.panel li::before{content:"\2192\00a0";color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-block;padding:6px 13px;border:1px solid #3a3730;border-radius:999px;font-size:13px;color:#d9d5cd}
+.skill .chips{margin-top:6px}
+.skill p{color:#c8c4bc;font-size:15px;margin-bottom:14px}
+.avail{display:block;margin-top:8px;font:500 13px/1.3 var(--body);color:var(--accent)}
+.grp{padding:26px 12px 12px;font:600 13px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.skip{position:absolute;left:-999px;top:8px;z-index:50;padding:10px 14px;background:var(--fg);color:#000;border-radius:8px}
+.skip:focus{left:8px}
+.noscript-work{list-style:none;padding:0 var(--gutter);display:grid;gap:14px;color:#c8c4bc;margin-top:28px}
+
+/* journey groups */
+.group{margin-top:clamp(36px,5vw,64px)}
+.group h3.gh{font:600 13px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding-bottom:14px;border-bottom:1px solid var(--line)}
+.tl ul{list-style:none;display:grid;gap:6px;margin-top:10px;color:#c8c4bc;max-width:64ch}
+.tl .where{color:var(--mute);font-size:15px;margin-bottom:6px}
+.langs{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:28px;color:#c8c4bc;font-size:15px}
+.langs b{color:var(--fg);font-weight:600}
+
+/* contact form */
+.form{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:clamp(40px,6vw,72px);max-width:880px}
+.form .full{grid-column:1/-1}
+.form label{display:block;font:600 12px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:10px}
+.form input,.form textarea{width:100%;padding:12px 0;background:transparent;border:0;border-bottom:1px solid #3a3730;border-radius:0;color:var(--fg);font:400 18px/1.4 var(--body)}
+.form input:focus,.form textarea:focus{outline:none;border-color:var(--accent)}
+.form textarea{min-height:130px;resize:vertical}
+.form .status{min-height:1.4em;color:var(--mute);font-size:15px}
+.form button{cursor:pointer}
+
+@media (max-width:900px){
+  .row{grid-template-columns:44px 1fr;row-gap:8px}
+  .row p,.row .tags{grid-column:2;text-align:left}
+  .about{grid-template-columns:1fr}
+  .skills{grid-template-columns:1fr}
+  .panel{padding-left:12px}
+  .form{grid-template-columns:1fr}
+  .hint{display:none}
+  .top nav{display:none}
+  .top{grid-template-columns:1fr auto}
+}
+@media (max-width:560px){
+  .skills{grid-template-columns:1fr}
+  .tl div{grid-template-columns:1fr;gap:6px}
+  .stage{width:112vw;bottom:-6%}
+  .tagline{top:178px;bottom:auto;right:var(--gutter);max-width:none;font-size:15px}
+  .avail{font-size:12px}
+  .cta{padding:13px 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .marquee div{animation:none}
+}
+
+.fun-bit{position:fixed;left:0;top:0;pointer-events:none;z-index:99;will-change:transform,opacity;font-size:28px}
+.fun-toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:#fff;color:#000;font:700 14px var(--display,sans-serif);padding:10px 18px;border-radius:99px;opacity:0;transition:.35s;z-index:100;pointer-events:none}
+.fun-toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){.fun-bit{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#work">Skip to content</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="top">
+  <a href="#hero">Aymen Kamel</a>
+  <nav aria-label="Sections"><a href="#work">Work</a><a href="#about">About</a><a href="#path">Journey</a><a href="#contact">Contact</a></nav>
+  <a href="#contact">Creative portfolio</a>
+</header>
+
+<section class="hero" id="hero" aria-label="Introduction">
+  <h1 class="mega" id="mega" aria-label="I'm Aymen"><span id="megaText">I'M AYMEN</span></h1>
+
+  <div class="stage" id="stage">
+    <div class="portrait" id="portrait" data-state="base">
+      <img data-f="base" class="on" alt="Aymen, illustrated portrait" src="__base__">
+      <img data-f="smile" alt="" src="__smile__">
+      <img data-f="hovered" alt="" src="__hovered__">
+      <img data-f="held" alt="" src="__held__">
+      <img data-f="pulled" alt="" src="__pulled__">
+      <img data-f="dazed" alt="" src="__dazed__">
+      <img data-f="fedUp" alt="" src="__fedUp__">
+      <canvas id="gl" aria-hidden="true"></canvas>
+    </div>
+  </div>
+
+  <div class="hint" aria-hidden="true">
+    <svg viewBox="0 0 40 20" fill="none" stroke-width="1.2" stroke-linecap="round"><path d="M38 14c-10-8-22-9-35-3M3 11l7-5M3 11l8 3"/></svg>
+    <span>Hover. Tap. Pull. Meet my playful side.</span>
+  </div>
+
+  <p class="tagline">Aymen Kamel. AI engineer and full-stack developer, with a playful side.<span class="avail">Open to alternance, internships and AI or software roles.</span></p>
+  <a class="cta" href="#work">Tap &amp; explore</a>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div>
+    <span>Computer vision</span><i>✦</i><span>Applied AI</span><i>✦</i><span>Sports tech</span><i>✦</i><span>Full-stack</span><i>✦</i><span>Data &amp; AI engineering</span><i>✦</i>
+    <span>Computer vision</span><i>✦</i><span>Applied AI</span><i>✦</i><span>Sports tech</span><i>✦</i><span>Full-stack</span><i>✦</i><span>Data &amp; AI engineering</span><i>✦</i>
+  </div>
+</div>
+
+<section class="block" id="work">
+  <div class="label"><span>Selected work</span><span id="count">11 projects</span></div>
+  <h2>Things I build</h2>
+  <div id="rows"></div>
+  <noscript>
+    <ul class="noscript-work">
+      <li><strong>SmartPlayAI</strong>: padel match analysis with YOLOv11, TrackNet and FastAPI.</li>
+      <li><strong>HeroScore</strong>: sports-tech SaaS for AI player scoring and leaderboards. Co-founded.</li>
+      <li><strong>MÉMORA</strong>: keepsake gifts that open a private video memory with an NFC tap.</li>
+      <li><strong>Basketball Shot AI</strong>: shot detection and ball tracking from smartphone video.</li>
+      <li><strong>Padel Replay</strong>: IP camera and ESP32 button that replay the last 60 seconds of play.</li>
+      <li><strong>RAG Research Lab</strong>: chunking strategies and retrieval benchmarks.</li>
+      <li><strong>UtopiaHire</strong>: AI career architect with semantic skill matching (3rd place, TSYP13).</li>
+      <li><strong>Player Detection API</strong>: asynchronous REST service for player detection on sports video.</li>
+      <li><strong>AI Interview Mock App</strong>: interview practice with speech transcription and LLM evaluation.</li>
+      <li><strong>Document RAG Chat</strong>: documentation Q&amp;A with vector search and citations.</li>
+      <li><strong>CNN Classification</strong>: VGG16 vs ResNet50 transfer learning, 94% test accuracy.</li>
+    </ul>
+  </noscript>
+</section>
+
+<section class="block" id="about" style="padding-top:0">
+  <div class="label"><span>About</span><span>Sfax, Tunisia</span></div>
+  <div class="about" style="margin-top:clamp(28px,4vw,56px)">
+    <p class="lead">I turn <em>computer vision</em> and AI into reliable software people actually use. I like the whole loop: framing the problem, choosing the model, shipping the API and polishing the interface.</p>
+    <dl class="facts">
+      <div><dt>Studying</dt><dd>Engineering cycle, Data &amp; AI, IIT Sfax</dd></div>
+      <div><dt>Founder</dt><dd>HeroScore, with Racem Dammak</dd></div>
+      <div><dt>Community</dt><dd>IEEE Computer Society board, 2 years</dd></div>
+      <div><dt>Looking for</dt><dd>Alternance, internships, AI and software roles</dd></div>
+    </dl>
+  </div>
+  <div class="skills">
+    <div class="skill"><h4>AI and computer vision</h4><p>Real-time detection and tracking, deep networks and LLM features with retrieval.</p><div class="chips"><span class="chip">YOLOv11</span><span class="chip">TrackNet</span><span class="chip">OpenCV</span><span class="chip">PyTorch</span><span class="chip">TensorFlow</span><span class="chip">LLMs and RAG</span></div></div>
+    <div class="skill"><h4>Full-stack and APIs</h4><p>Responsive web apps and high-throughput asynchronous REST services.</p><div class="chips"><span class="chip">FastAPI</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">NestJS</span><span class="chip">Angular</span><span class="chip">Node.js</span><span class="chip">Tailwind CSS</span></div></div>
+    <div class="skill"><h4>Software and cloud</h4><p>Modular architecture, video ingestion pipelines and containerised deployments.</p><div class="chips"><span class="chip">Docker</span><span class="chip">PostgreSQL</span><span class="chip">SQL</span><span class="chip">Git and GitHub</span><span class="chip">Cloudflare</span><span class="chip">Microservices</span></div></div>
+  </div>
+  <p class="langs"><span><b>Arabic</b> native</span><span><b>French</b> fluent, B2</span><span><b>English</b> B2</span><span><b>Dutch</b> A1</span></p>
+</section>
+
+<section class="block" id="path" style="padding-top:0">
+  <div class="label"><span>Journey</span><span>2023 to now</span></div>
+  <h2>How I got here</h2>
+
+  <div class="group"><h3 class="gh">Experience</h3>
+    <div class="tl">
+      <div><time>2026</time><article><h3>AI and computer vision developer, SmartPlayAI</h3><p class="where">Final-year project (PFE) with Ultima, Tunisia</p><ul><li>Player detection and tracking with fine-tuned YOLO models.</li><li>Ball tracking with TrackNet and trajectory analytics.</li><li>FastAPI services feeding a React dashboard.</li></ul></article></div>
+      <div><time>2025</time><article><h3>Co-founder and lead AI developer, HeroScore</h3><p class="where">OSTX Startup Program, Tunisia and remote</p><ul><li>AI scoring for real-time player and team ratings.</li><li>Scalable microservices and intelligent API workflows.</li></ul></article></div>
+      <div><time>2025</time><article><h3>Full-stack and AI engineering intern, Djagora</h3><p class="where">Sfax, Tunisia</p><ul><li>Angular and NestJS web applications.</li><li>AI features added to existing client software.</li><li>REST API design and performance testing.</li></ul></article></div>
+    </div>
+  </div>
+
+  <div class="group"><h3 class="gh">Education</h3>
+    <div class="tl">
+      <div><time>Now</time><article><h3>Engineering degree, Data &amp; AI</h3><p class="where">International Institute of Technology (IIT), Sfax</p></article></div>
+      <div><time>2023 to 2026</time><article><h3>Licence in Computer Science</h3><p class="where">Faculty of Sciences of Sfax. Software Engineering and Systems.</p></article></div>
+      <div><time>2023</time><article><h3>Baccalauréat, Mathematics</h3><p class="where">Lycée Habib Maazoun. Mention Très Bien.</p></article></div>
+    </div>
+  </div>
+
+  <div class="group"><h3 class="gh">Awards and certifications</h3>
+    <div class="tl">
+      <div><time>2024</time><article><h3>3rd place, TSYP13 national competition</h3><p class="where">IEEE, team FSS</p><p>For UtopiaHire, an AI engine that matches candidate skills to roles.</p></article></div>
+      <div><time>2025</time><article><h3>OSTX Startup Program</h3><p class="where">Incubation</p><p>SaaS architecture, microservices prototyping and investor pitching.</p></article></div>
+      <div><time>Certificate</time><article><h3>Deep Learning Fundamentals</h3><p class="where">NVIDIA Deep Learning Institute</p></article></div>
+    </div>
+  </div>
+
+  <div class="group"><h3 class="gh">Leadership</h3>
+    <div class="tl">
+      <div><time>2 years</time><article><h3>Executive bureau member, IEEE Computer Society</h3><p>Technical workshops, software engineering seminars and regional hackathons.</p></article></div>
+      <div><time>Events</time><article><h3>CSTAM, IEEE Xtreme 18.0, WiEAct, PESTGM.i</h3><p>Took part and represented the chapter, presenting work on AI and web engineering.</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="block contact" id="contact" style="padding-top:0">
+  <div class="label"><span>Contact</span><span>Open to alternance, internships and international roles</span></div>
+  <h2>Let's build something meaningful</h2>
+  <a class="mail" id="mail" href="mailto:kamelaymen793@gmail.com">kamelaymen793@gmail.com</a>
+  <div class="actions">
+    <button class="btn" id="copy" type="button">Copy email</button>
+    <a class="btn" href="https://www.linkedin.com/in/aymen-kamel-b135a3301/" rel="noopener">LinkedIn</a>
+    <a class="btn" href="https://github.com/aymen-kamel" rel="noopener">GitHub</a>
+  </div>
+
+  <form class="form" id="form" name="contact" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="contact">
+    <p hidden><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+    <div><label for="f-name">Full name</label><input id="f-name" name="name" required autocomplete="name"></div>
+    <div><label for="f-email">Email</label><input id="f-email" name="email" type="email" required autocomplete="email"></div>
+    <div class="full"><label for="f-subject">Subject</label><input id="f-subject" name="subject"></div>
+    <div class="full"><label for="f-msg">Message</label><textarea id="f-msg" name="message" required></textarea></div>
+    <div class="full"><button class="btn" type="submit">Send message</button></div>
+    <p class="status full" id="status" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+<footer><span>Aymen Kamel, AI engineer and full-stack developer</span><span><a href="https://www.linkedin.com/in/aymen-kamel-b135a3301/" rel="noopener">LinkedIn</a> · <a href="https://github.com/aymen-kamel" rel="noopener">GitHub</a> · Sfax, Tunisia, 2026</span></footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- content ---- */
+  var projects = [
+    {n:"SmartPlayAI", t:"2026 · Final-year project, Ultima", d:"Padel match analysis that turns match footage into tactical insights.", open:true,
+     chips:["YOLOv11","TrackNet","FastAPI","React","Python","Computer vision"],
+     pts:["Player detection and continuous tracking with fine-tuned YOLO models.","Ball tracking with TrackNet and trajectory analytics.","Automated performance metrics and tactical indicators.","Asynchronous FastAPI services feeding a React dashboard."]},
+    {n:"HeroScore", t:"2025 · Startup, OSTX program", d:"Sports-tech SaaS for automated match analysis, AI player scoring and leaderboards. Co-founded with Racem Dammak.",
+     chips:["SaaS","Microservices","Python","Machine learning"],
+     pts:["AI scoring algorithms for real-time player and team ratings.","Scalable microservices and intelligent API workflows."]},
+    {n:"MÉMORA", t:"2026 · Independent product", d:"Physical keepsake gifts that open a private video memory with an NFC tap, with a QR fallback.",
+     chips:["Full-stack","Cloud video","NFC hardware","Product design","UX/UI"],
+     pts:["Photographs and private video memories joined through NFC-enabled products.","In active prototyping."],
+     links:[{l:"memora.tn",u:"https://memora.tn"},{l:"Web app",u:"https://memora-digital-story.vercel.app/"}]},
+    {n:"Basketball Shot AI", t:"Personal project", d:"Analyses basketball shots from smartphone video, tracks the ball and calls each shot made or missed.",
+     chips:["YOLO","Ball tracking","Computer vision"]},
+    {n:"Padel Replay", t:"MVP demo", d:"An IP camera and an ESP32 button that replay the last 60 seconds of play.",
+     chips:["ESP32","IP camera","Video pipeline"]},
+    {n:"RAG Research Lab", t:"Open source", d:"Local-first lab for chunking strategies, chunk graphs and retrieval benchmarks.",
+     chips:["RAG","Chunking","Benchmarking"]},
+    {n:"UtopiaHire", t:"2024 · 3rd place, TSYP13", d:"AI career architect that maps candidate skills to roles with semantic matching.",
+     chips:["LLM","Semantic matching","Talent sourcing"]},
+    {n:"Player Detection API", t:"2025 · AI engineering", d:"Asynchronous REST microservice for real-time player detection and bounding boxes on sports video.",
+     chips:["YOLOv11","FastAPI","OpenCV"]},
+    {n:"AI Interview Mock App", t:"2024 to 2025 · Web and AI", d:"Technical interview practice with real-time speech transcription and LLM-based evaluation.",
+     chips:["LLM","Speech-to-text","React"]},
+    {n:"Document RAG Chat", t:"2024 · Semantic search", d:"Documentation Q&A with vector search, chunk embeddings and source citations.",
+     chips:["RAG","Vector search","LLM"]},
+    {n:"CNN Classification", t:"2024 · Academic", d:"Transfer-learning comparison of VGG16 and ResNet50, reaching 94% test accuracy.",
+     chips:["TensorFlow","Transfer learning","Deep learning"]}
+  ];
+  var rows = document.getElementById('rows');
+  document.getElementById('count').textContent = projects.length + ' projects';
+  projects.forEach(function(p, i){
+    var det = document.createElement('details');
+    det.className = 'proj';
+    if(p.open) det.open = true;
+    var sum = document.createElement('summary');
+    var row = document.createElement('div');
+    row.className = 'row';
+    var n = document.createElement('span'); n.className = 'n'; n.textContent = String(i + 1).padStart(2, '0');
+    var h = document.createElement('h3'); h.textContent = p.n;
+    var d = document.createElement('p'); d.textContent = p.d;
+    var t = document.createElement('span'); t.className = 'tags'; t.textContent = p.t;
+    row.append(n, h, d, t); sum.appendChild(row); det.appendChild(sum);
+    var panel = document.createElement('div'); panel.className = 'panel';
+    var chips = document.createElement('div'); chips.className = 'chips';
+    p.chips.forEach(function(c){ var s = document.createElement('span'); s.className = 'chip'; s.textContent = c; chips.appendChild(s); });
+    panel.appendChild(chips);
+    if(p.pts){
+      var ul = document.createElement('ul');
+      p.pts.forEach(function(x){ var li = document.createElement('li'); li.textContent = x; ul.appendChild(li); });
+      panel.appendChild(ul);
+    }
+    if(p.links){
+      var lw = document.createElement('div'); lw.className = 'chips';
+      p.links.forEach(function(k){ var a = document.createElement('a'); a.className = 'btn'; a.href = k.u; a.rel = 'noopener'; a.textContent = k.l + ' \u2197'; lw.appendChild(a); });
+      panel.appendChild(lw);
+    }
+    det.appendChild(panel);
+    if(i === 0 || i === 3){
+      var g = document.createElement('p'); g.className = 'grp'; g.textContent = i === 0 ? 'Featured' : 'More work'; rows.appendChild(g);
+    }
+    rows.appendChild(det);
+  });
+
+  /* ---- fit the giant headline to the screen width ---- */
+  var mega = document.getElementById('mega'), megaText = document.getElementById('megaText');
+  function fit(){
+    megaText.style.fontSize = '100px';
+    var w = mega.clientWidth, tw = megaText.getBoundingClientRect().width;
+    if(tw > 0) megaText.style.fontSize = (100 * w / tw) + 'px';
+  }
+  fit();
+  window.addEventListener('resize', fit);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+
+  /* ---- portrait: tilt, expressions, pull ----
+     base      resting
+     smile     pointer over the face, or over "Tap & explore"
+     hovered   pointer stays on the face for a while
+     held      mouse or finger pressed
+     pulled    dragged away from rest
+     dazed     just let go after a pull
+     fedUp     third pull in a row
+  */
+  var hero = document.getElementById('hero'), stage = document.getElementById('stage'), portrait = document.getElementById('portrait');
+  var cta = document.querySelector('.cta');
+  var imgs = {};
+  Array.prototype.forEach.call(portrait.querySelectorAll('img'), function(i){ imgs[i.dataset.f] = i; });
+  var tgt = {rx:0, ry:0, tx:0}, cur = {rx:0, ry:0, tx:0};
+  var pull = {x:0, y:0, vx:0, vy:0, drag:false, sx:0, sy:0, moved:false, gu:.5, gv:.4};
+  var over = false, ctaOver = false, lock = null, annoy = null, pulls = 0, pullTimer = null, current = 'base';
+
+  function show(name){
+    if(name === current) return;
+    imgs[current].classList.remove('on');
+    imgs[name].classList.add('on');
+    current = name;
+    portrait.dataset.state = name;
+  }
+  function rest(){
+    if(pull.drag) return;
+    if(lock) return;
+    show(over ? (annoy === 'done' ? 'hovered' : 'smile') : ctaOver ? 'smile' : 'base');
+  }
+  function hold(name, ms){
+    clearTimeout(lock);
+    show(name);
+    lock = setTimeout(function(){ lock = null; rest(); }, ms);
+  }
+
+  hero.addEventListener('pointermove', function(e){
+    var r = hero.getBoundingClientRect();
+    var nx = ((e.clientX - r.left) / r.width) * 2 - 1;
+    var ny = ((e.clientY - r.top) / r.height) * 2 - 1;
+    tgt.ry = nx * 12; tgt.rx = -ny * 7; tgt.tx = nx * 16;
+    if(pull.drag){
+      pull.x = e.clientX - pull.sx;
+      pull.y = e.clientY - pull.sy;
+      if(!pull.moved && Math.hypot(pull.x, pull.y) > 18){ pull.moved = true; show('pulled'); }
+    }
+  });
+  hero.addEventListener('pointerleave', function(){ tgt.rx = tgt.ry = tgt.tx = 0; });
+
+  stage.addEventListener('pointerenter', function(){
+    over = true; annoy = null; clearTimeout(stage._t);
+    rest();
+    var t = setTimeout(function(){ if(over && !pull.drag){ annoy = 'done'; rest(); } }, 2800);
+    stage._t = t;
+  });
+  stage.addEventListener('pointerleave', function(){
+    over = false; annoy = null; clearTimeout(stage._t); rest();
+  });
+  stage.addEventListener('pointerdown', function(e){
+    pull.drag = true; pull.moved = false; pull.touch = e.pointerType !== 'mouse';
+    pull.sx = e.clientX - pull.x; pull.sy = e.clientY - pull.y;
+    var sr = stage.getBoundingClientRect();
+    pull.gu = (e.clientX - sr.left) / sr.width; pull.gv = (e.clientY - sr.top) / sr.height;
+    stage.classList.add('dragging');
+    try{ stage.setPointerCapture(e.pointerId); }catch(_){}
+    clearTimeout(lock); lock = null;
+    show('held');
+  });
+  function release(){
+    if(!pull.drag) return;
+    var wasPulled = pull.moved;
+    pull.drag = false; stage.classList.remove('dragging');
+    if(wasPulled){
+      pulls += 1;
+      clearTimeout(pullTimer); pullTimer = setTimeout(function(){ pulls = 0; }, 6000);
+      if(pulls >= 3){ pulls = 0; hold('fedUp', 2200); }
+      else hold('dazed', 1500);
+    } else if(pull.touch){
+      hold('smile', 1900);
+    } else {
+      rest();
+    }
+  }
+  stage.addEventListener('pointerup', release);
+  stage.addEventListener('pointercancel', release);
+
+  cta.addEventListener('pointerenter', function(){ ctaOver = true; rest(); });
+  cta.addEventListener('pointerleave', function(){ ctaOver = false; rest(); });
+  cta.addEventListener('focus', function(){ ctaOver = true; rest(); });
+  cta.addEventListener('blur', function(){ ctaOver = false; rest(); });
+
+  /* ---- elastic warp: the portrait is drawn through a shader that stretches it toward the pull ---- */
+  var cv = document.getElementById('gl'), gl = null, tex = {}, uni = {};
+  function sizeGL(){
+    if(!gl) return;
+    var dpr = Math.min(3, window.devicePixelRatio || 1);
+    cv.width = Math.max(2, Math.round(stage.clientWidth * dpr));
+    cv.height = Math.max(2, Math.round(stage.clientHeight * dpr));
+    gl.viewport(0, 0, cv.width, cv.height);
+  }
+  function initGL(){
+    try{ gl = cv.getContext('webgl', {alpha:true, premultipliedAlpha:true, antialias:false}); }catch(_){ gl = null; }
+    if(!gl) return;
+    function sh(type, src){ var o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); return gl.getShaderParameter(o, gl.COMPILE_STATUS) ? o : null; }
+    var vs = sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 uv;void main(){uv=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}');
+    var fs = sh(gl.FRAGMENT_SHADER,
+      'precision mediump float;varying vec2 uv;uniform sampler2D t;uniform vec2 g;uniform vec2 d;'+
+      'void main(){'+
+        'vec2 q=uv-(g+d);'+
+        'float w=exp(-dot(q,q)/.16);'+
+        'w*=1.-smoothstep(.6,1.,uv.y);'+
+        'vec2 s=uv-d*w;'+
+        'if(s.x<0.||s.x>1.||s.y<0.||s.y>1.){gl_FragColor=vec4(0.);}else{gl_FragColor=texture2D(t,s);}'+
+      '}');
+    if(!vs || !fs){ gl = null; return; }
+    var pr = gl.createProgram(); gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
+    if(!gl.getProgramParameter(pr, gl.LINK_STATUS)){ gl = null; return; }
+    gl.useProgram(pr);
+    var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    uni.g = gl.getUniformLocation(pr, 'g'); uni.d = gl.getUniformLocation(pr, 'd');
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    sizeGL();
+    Object.keys(imgs).forEach(function(name){
+      var im = imgs[name];
+      function up(){
+        var t = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, t);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im);
+        gl.generateMipmap(gl.TEXTURE_2D);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        tex[name] = t;
+        if(name === 'base') portrait.classList.add('gl');
+      }
+      if(im.decode){ im.decode().then(up, function(){}); } else if(im.complete){ up(); } else { im.onload = up; }
+    });
+    window.addEventListener('resize', sizeGL);
+  }
+  function draw(){
+    if(!gl || !tex[current]) return;
+    var w = stage.clientWidth || 1, h = stage.clientHeight || 1;
+    var len = Math.hypot(pull.x, pull.y), lim = w * .55;
+    var k = lim / (lim + len) * 1.25;
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.bindTexture(gl.TEXTURE_2D, tex[current]);
+    gl.uniform2f(uni.g, pull.gu, pull.gv);
+    gl.uniform2f(uni.d, pull.x * k / w, pull.y * k / h);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+  if(!reduce) initGL();
+
+  /* phones have no hover, so the face greets you and smiles on its own, and again after every tap */
+  if(window.matchMedia('(pointer: coarse)').matches){
+    setTimeout(function(){ if(!pull.drag && !lock) hold('smile', 1800); }, 700);
+    setInterval(function(){
+      if(!pull.drag && !lock && current === 'base' && window.scrollY < window.innerHeight * .6) hold('smile', 1500);
+    }, 5200);
+  }
+
+  function tick(){
+    cur.rx += (tgt.rx - cur.rx) * .09;
+    cur.ry += (tgt.ry - cur.ry) * .09;
+    cur.tx += (tgt.tx - cur.tx) * .09;
+    if(!pull.drag){
+      pull.vx += (-pull.x * .1) - pull.vx * .13;
+      pull.vy += (-pull.y * .1) - pull.vy * .13;
+      pull.x += pull.vx; pull.y += pull.vy;
+      if(Math.abs(pull.x) < .01 && Math.abs(pull.vx) < .01) pull.x = pull.vx = 0;
+      if(Math.abs(pull.y) < .01 && Math.abs(pull.vy) < .01) pull.y = pull.vy = 0;
+    }
+    portrait.style.transform = 'translate3d('+cur.tx.toFixed(2)+'px,0,0) rotateX('+cur.rx.toFixed(2)+'deg) rotateY('+cur.ry.toFixed(2)+'deg)';
+    draw();
+    requestAnimationFrame(tick);
+  }
+  if(!reduce) requestAnimationFrame(tick);
+
+  /* ---- scroll motion: everything is computed from scroll position, so it plays the same going down and up ---- */
+  (function(){
+    if(reduce) return;
+    var clamp = function(v, a, b){ return Math.max(a, Math.min(b, v)); };
+    var progress = document.getElementById('progress');
+    var marquee = document.querySelector('.marquee'), mTrack = marquee && marquee.firstElementChild;
+    if(marquee) marquee.classList.add('js');
+    var heroEls = {
+      mega: document.getElementById('mega'), stage: document.getElementById('stage'),
+      tag: document.querySelector('.tagline'), hint: document.querySelector('.hint'), cta: document.querySelector('.cta')
+    };
+    var rise = Array.prototype.slice.call(document.querySelectorAll('.label, .about .lead, .facts > div, .skill, .langs, details.proj, .group .gh, .tl > div, .mail, .actions, .form'));
+    var slide = Array.prototype.slice.call(document.querySelectorAll('section.block h2'));
+    var lastY = -1, vel = 0, offset = 0, lastTop = window.scrollY;
+
+    function update(y, vh){
+      /* hero depth: headline climbs fastest, portrait slowest */
+      var f = clamp(y / (vh * .9), 0, 1);
+      heroEls.mega.style.translate = '0 ' + (-y * .34).toFixed(1) + 'px';
+      heroEls.stage.style.translate = '0 ' + (y * .16).toFixed(1) + 'px';
+      var fade = 1 - clamp(y / (vh * .45), 0, 1);
+      heroEls.tag.style.opacity = fade; heroEls.hint.style.opacity = fade; heroEls.cta.style.opacity = fade;
+      heroEls.tag.style.translate = '0 ' + (-y * .18).toFixed(1) + 'px';
+      heroEls.mega.style.opacity = 1 - f * .55;
+
+      /* content rises in from below as it enters; same maths reverses on the way back up */
+      rise.forEach(function(el){
+        var r = el.getBoundingClientRect();
+        var t = clamp((vh - r.top) / (vh * .3), 0, 1);
+        var e = 1 - Math.pow(1 - t, 3);
+        el.style.opacity = (.2 + .8 * e).toFixed(3);
+        el.style.translate = '0 ' + ((1 - e) * 56).toFixed(1) + 'px';
+      });
+
+      /* big headings drift sideways with scroll */
+      slide.forEach(function(el){
+        var r = el.getBoundingClientRect();
+        var d = clamp(((r.top + r.height / 2) - vh / 2) / vh, -1, 1);
+        el.style.translate = (d * -2).toFixed(2) + 'vw 0';
+      });
+    }
+
+    function frame(){
+      var y = window.scrollY, vh = window.innerHeight;
+      var dy = y - lastTop; lastTop = y;
+      vel += (dy - vel) * .12;
+      if(y !== lastY){
+        lastY = y;
+        update(y, vh);
+        var max = document.documentElement.scrollHeight - vh;
+        progress.style.transform = 'scaleX(' + (max > 0 ? clamp(y / max, 0, 1) : 0).toFixed(4) + ')';
+      }
+      if(mTrack){
+        var half = mTrack.scrollWidth / 2;
+        offset += .7 + vel * .9;
+        if(half > 0){ offset = ((offset % half) + half) % half; mTrack.style.transform = 'translate3d(' + (-offset).toFixed(1) + 'px,0,0)'; }
+      }
+      requestAnimationFrame(frame);
+    }
+    window.addEventListener('resize', function(){ lastY = -1; });
+    requestAnimationFrame(frame);
+  })();
+
+  /* ---- contact ---- */
+  var copy = document.getElementById('copy');
+  copy.addEventListener('click', function(){
+    try{
+      navigator.clipboard.writeText('kamelaymen793@gmail.com').then(function(){ copy.textContent = 'Copied'; setTimeout(function(){ copy.textContent = 'Copy email'; }, 1600); }, function(){ copy.textContent = 'Select the address above'; });
+    }catch(_){ copy.textContent = 'Select the address above'; }
+  });
+
+  var form = document.getElementById('form'), status = document.getElementById('status');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    status.textContent = 'Sending...';
+    fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams(new FormData(form)).toString()})
+      .then(function(r){
+        if(!r.ok) throw new Error('bad status');
+        status.textContent = 'Thanks, your message is sent. I will reply by email.';
+        form.reset();
+      })
+      .catch(function(){ status.textContent = 'The message could not be sent. Please write to kamelaymen793@gmail.com.'; });
+  });
+})();
+
+/* Easter eggs: pure JS, no libraries */
+(function(){
+  var calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var toast=document.createElement('div');toast.className='fun-toast';document.body.appendChild(toast);
+  var tt;function say(t){toast.textContent=t;toast.classList.add('on');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('on')},2600)}
+  function burst(list,x,y,n){
+    if(calm)return;
+    for(var i=0;i<n;i++){(function(){
+      var e=document.createElement('div');e.className='fun-bit';e.textContent=list[i%list.length];document.body.appendChild(e);
+      var a=Math.random()*Math.PI*2,v=6+Math.random()*10,px=x,py=y,vx=Math.cos(a)*v,vy=Math.sin(a)*v-8,r=0,life=0;
+      (function f(){life++;vy+=.45;px+=vx;py+=vy;r+=vx*2;
+        e.style.transform='translate('+px+'px,'+py+'px) rotate('+r+'deg)';e.style.opacity=Math.max(0,1-life/90);
+        if(life<90)requestAnimationFrame(f);else e.remove()})();
+    })()}
+  }
+  function center(){return [innerWidth/2,innerHeight/2]}
+  var seq=[],K=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'],word='',tapT=[];
+  addEventListener('keydown',function(e){
+    seq.push(e.key);seq=seq.slice(-10);
+    if(seq.join()===K.join()){var c=center();burst(['🎉','⭐','💻','🤖','🎾'],c[0],c[1],40);say('Konami unlocked. Hire this guy.')}
+    if(e.key.length===1){word=(word+e.key.toLowerCase()).slice(-5);
+      if(word==='padel'){var c2=center();burst(['🎾'],c2[0],c2[1],16);say('Smash! HeroScore tracks this.')}
+      if(word==='hello'){var c3=center();burst(['👋'],c3[0],c3[1],12);say('Hello! Open to alternance.')}
+    }
+  });
+  /* triple tap/click on the headline */
+  var m=document.getElementById('mega');
+  if(m)m.addEventListener('click',function(e){
+    var n=Date.now();tapT=tapT.filter(function(t){return n-t<900});tapT.push(n);
+    if(tapT.length>=3){tapT=[];burst(['✨','💥','🤯'],e.clientX,e.clientY,22);say('You found a secret.')}
+  });
+  try{console.log('%cHi recruiter 👋 Pure HTML, CSS and JS. Try the Konami code, or type "padel".','font:700 14px sans-serif')}catch(_){}
+})();
+</script>
+</body>
+</html>
