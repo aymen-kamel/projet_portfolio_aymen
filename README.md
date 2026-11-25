@@ -2,16 +2,33 @@
 
 One-page portfolio with a black hero (giant headline and a cursor-reactive, pullable portrait rendered with WebGL), then projects with expandable case studies, expertise, journey and a contact form.
 
-The site is a single self-contained `index.html`. It has no framework and no npm install. The only build step embeds the portrait images into the HTML.
+The site is a static `index.html` plus one stylesheet, `style.css`. It has no framework and no npm install. The only build step embeds the portrait images into the HTML.
 
-Live: https://aymenkamel.netlify.app/
+Live (GitHub Pages): https://aymen-kamel.github.io/projet_portfolio_aymen/
+Source: https://github.com/aymen-kamel/projet_portfolio_aymen
+
+## What the page contains
+
+| Part | HTML used | Notes |
+|---|---|---|
+| Hero | `header`, `nav`, `h1`, `img`, `canvas` | WebGL portrait that reacts to hover, press and pull |
+| Work | `details`/`summary`, `ul`, `noscript` | 11 projects built from a JS array, static fallback without JS |
+| About | `dl`, `table` (`caption`, `thead`, `tbody`, `th scope`), `figure` + `video` + `figcaption` | Stack table and a 10 s video of the portrait states |
+| Journey | `article`, `time`, `ul` | Experience, education, awards, leadership |
+| Quiz | `form`, `fieldset`, `legend`, radio inputs | 5 questions scored in JavaScript, with feedback per answer |
+| Contact | `form`, `label`, links, CV buttons | Open or save the CV PDF |
+
+All sections sit inside `<main>`; the footer sits outside it.
 
 ## Repository layout
 
 ```
-src/index.template.html   the source you edit (all HTML, CSS and JS)
+src/index.template.html   the HTML and JavaScript source you edit
+style.css                 all styles, linked from the page
 assets/portraits/*.png    portrait sources, one per expression
 assets/portraits/*.webp   portrait images that build.py embeds
+assets/portrait-reel.mp4  video of the portrait states (+ .jpg poster)
+assets/Aymen-Kamel-CV.pdf CV behind the Open CV and Save CV buttons
 assets/og.png             share image (1200x630)
 build.py                  embeds the portraits into the template
 index.html                generated output, deployed as-is
@@ -54,18 +71,35 @@ This reads `src/index.template.html`, replaces each `__name__` placeholder with 
 ### 3. Preview
 Open `index.html` in a browser. There is no server to start.
 
+### Optional: regenerate the video
+`assets/portrait-reel.mp4` is made from the seven portrait PNGs: Pillow draws each frame (portrait plus caption on the black background), then ffmpeg encodes them as H.264 at 24 fps so every browser can play it.
+
+```powershell
+python -m pip install pillow imageio-ffmpeg
+```
+Render the frames to a folder with Pillow, then encode with the ffmpeg binary that `imageio_ffmpeg.get_ffmpeg_exe()` returns:
+```powershell
+ffmpeg -framerate 24 -i frames/f%04d.png -c:v libx264 -pix_fmt yuv420p -crf 26 -movflags +faststart assets/portrait-reel.mp4
+```
+
 ## Editing the content
 
 - **Projects:** the `projects` array in the `<script>` at the bottom of `src/index.template.html`. Each entry has `n` (name), `t` (tag line), `d` (description), `chips`, and optional `pts` (bullet points), `links` and `open` (expanded by default). The first item gets the "Featured" label and the fourth starts "More work".
 - **Journey, About, Contact:** plain HTML sections in the template body.
+- **Quiz:** questions are plain HTML in the `#quiz` section; the correct answers and explanations are the `answers` object in the script. Keep both in sync.
+- **Styles:** edit `style.css` directly; it is not touched by `build.py`.
 - **No-JS fallback:** the `<noscript>` list under "Selected work" mirrors the projects array. Update both when you add or rename a project.
 - **Head metadata:** title, description, Open Graph and JSON-LD sit at the top of the template. The canonical and og URLs assume `https://aymenkamel.netlify.app/`. Change them if the domain changes, and update `sitemap.xml` and `robots.txt` too.
 
-## Deploy on Netlify
+## Deploy
 
-The site is static. Netlify only needs to publish the repository root.
+### GitHub Pages (current)
+Pages publishes the root of the `main` branch. Every push to `main` redeploys within a minute; nothing else to run. Settings live under the repository's Settings > Pages.
 
-**Option A (recommended): connect the GitHub repo.** In Netlify, choose Add new site > Import an existing project > GitHub, pick `aymen-kamel/projet_portfolio_aymen`, leave the build command empty and set the publish directory to `.`. Every push to `main` then redeploys.
+Note: the contact form is built for Netlify Forms, so submissions do not work on GitHub Pages. The email, Copy email and CV buttons still work.
+
+### Netlify (alternative)
+**Option A: connect the GitHub repo.** In Netlify, choose Add new site > Import an existing project > GitHub, pick `aymen-kamel/projet_portfolio_aymen`, leave the build command empty and set the publish directory to `.`. Every push to `main` then redeploys.
 
 **Option B: CLI, one-off deploy.**
 ```powershell
@@ -85,6 +119,5 @@ The form uses Netlify Forms. The `<form>` already has `data-netlify="true"` and 
 base (rest), smile (hover face or CTA), hovered (stay on face ~3s), held (press), pulled (drag, elastic stretch), dazed (release after a pull), fedUp (third pull in a row).
 
 ## To add
-- CV PDF: add `assets/Aymen-Kamel-CV.pdf` and a Download CV button next to LinkedIn.
 - Links for SmartPlayAI and HeroScore.
 - Project screenshots or clips inside each case study.
