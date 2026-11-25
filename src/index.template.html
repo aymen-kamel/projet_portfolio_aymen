@@ -175,50 +175,20 @@
 </section>
 
 <section class="block" id="quiz" style="padding-top:0" aria-labelledby="quiz-title">
-  <div class="label"><span>Quiz</span><span>5 questions</span></div>
+  <div class="label"><span>Quiz</span><span>Type <code>start</code></span></div>
   <h2 id="quiz-title">How well were you reading?</h2>
-  <form class="quiz" id="quizForm" novalidate>
-    <fieldset>
-      <legend>1. Which model tracks the ball in SmartPlayAI?</legend>
-      <label><input type="radio" name="q1" value="a"> ResNet50</label>
-      <label><input type="radio" name="q1" value="b"> TrackNet</label>
-      <label><input type="radio" name="q1" value="c"> VGG16</label>
-      <p class="fb" aria-live="polite"></p>
-    </fieldset>
-    <fieldset>
-      <legend>2. Who co-founded HeroScore with Aymen?</legend>
-      <label><input type="radio" name="q2" value="a"> Racem Dammak</label>
-      <label><input type="radio" name="q2" value="b"> The Djagora team</label>
-      <label><input type="radio" name="q2" value="c"> Nobody, it is a solo project</label>
-      <p class="fb" aria-live="polite"></p>
-    </fieldset>
-    <fieldset>
-      <legend>3. How does a MÉMORA gift open its video memory?</legend>
-      <label><input type="radio" name="q3" value="a"> With a password</label>
-      <label><input type="radio" name="q3" value="b"> With a USB key</label>
-      <label><input type="radio" name="q3" value="c"> With an NFC tap</label>
-      <p class="fb" aria-live="polite"></p>
-    </fieldset>
-    <fieldset>
-      <legend>4. What place did UtopiaHire take at TSYP13?</legend>
-      <label><input type="radio" name="q4" value="a"> 1st</label>
-      <label><input type="radio" name="q4" value="b"> 3rd</label>
-      <label><input type="radio" name="q4" value="c"> 5th</label>
-      <p class="fb" aria-live="polite"></p>
-    </fieldset>
-    <fieldset>
-      <legend>5. What test accuracy did the CNN classification project reach?</legend>
-      <label><input type="radio" name="q5" value="a"> 78%</label>
-      <label><input type="radio" name="q5" value="b"> 86%</label>
-      <label><input type="radio" name="q5" value="c"> 94%</label>
-      <p class="fb" aria-live="polite"></p>
-    </fieldset>
-    <div class="quiz-actions">
-      <button class="btn" type="submit">Check my answers</button>
-      <button class="btn" type="reset">Try again</button>
+  <div class="term" id="term">
+    <div class="term-bar" aria-hidden="true"><i></i><i></i><i></i><span>aymen@portfolio: ~/quiz &mdash; bash</span></div>
+    <div class="term-body" id="termBody">
+      <div class="term-out" id="termOut" role="log" aria-live="polite" aria-label="Terminal output"></div>
+      <form class="term-line" id="termForm" autocomplete="off">
+        <label class="term-prompt" id="termPrompt" for="termIn">aymen@portfolio:~/quiz$</label>
+        <input class="term-in" id="termIn" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" enterkeyhint="send" aria-describedby="termHelp">
+      </form>
     </div>
-    <p class="quiz-score" id="quizScore" role="status" aria-live="polite"></p>
-  </form>
+  </div>
+  <p class="term-help" id="termHelp">Type <code>start</code> to take the 5-question quiz, or <code>help</code> to list every command. Answer with a, b or c. Arrow keys recall past commands.</p>
+  <noscript><p class="term-help">The quiz terminal needs JavaScript.</p></noscript>
 </section>
 
 <section class="block contact" id="contact" style="padding-top:0">
@@ -518,7 +488,7 @@
       mega: document.getElementById('mega'), stage: document.getElementById('stage'),
       tag: document.querySelector('.tagline'), hint: document.querySelector('.hint'), cta: document.querySelector('.cta')
     };
-    var rise = Array.prototype.slice.call(document.querySelectorAll('.label, .about .lead, .facts > div, .skill, .langs, details.proj, .group .gh, .tl > div, .mail, .actions, .form, .table-wrap, .reel, .quiz fieldset'));
+    var rise = Array.prototype.slice.call(document.querySelectorAll('.label, .about .lead, .facts > div, .skill, .langs, details.proj, .group .gh, .tl > div, .mail, .actions, .form, .table-wrap, .reel, .term'));
     var slide = Array.prototype.slice.call(document.querySelectorAll('section.block h2'));
     var lastY = -1, vel = 0, offset = 0, lastTop = window.scrollY;
 
@@ -591,38 +561,157 @@
       .catch(function(){ status.textContent = 'The message could not be sent. Please write to kamelaymen793@gmail.com.'; });
   });
 
-  /* ---- quiz: answers come from the content of this page ---- */
-  var quiz = document.getElementById('quizForm'), quizScore = document.getElementById('quizScore');
-  var answers = {
-    q1: {ok:'b', why:'TrackNet follows the ball; YOLO handles the players.'},
-    q2: {ok:'a', why:'HeroScore was co-founded with Racem Dammak.'},
-    q3: {ok:'c', why:'An NFC tap opens the memory, with a QR code as fallback.'},
-    q4: {ok:'b', why:'UtopiaHire took 3rd place at the TSYP13 national competition.'},
-    q5: {ok:'c', why:'VGG16 and ResNet50 transfer learning reached 94%.'}
-  };
-  var verdicts = ['Time to scroll back up!', 'A quick skim, then.', 'Not bad.', 'Good reading.', 'Very close!', 'Perfect score. Let’s talk.'];
-  quiz.addEventListener('submit', function(e){
-    e.preventDefault();
-    var score = 0, total = 0, missing = 0;
-    Object.keys(answers).forEach(function(q){
-      total++;
-      var fs = quiz.querySelector('input[name="' + q + '"]').closest('fieldset');
-      var fb = fs.querySelector('.fb');
-      var picked = quiz.querySelector('input[name="' + q + '"]:checked');
-      fs.classList.remove('right', 'wrong');
-      if(!picked){ missing++; fb.textContent = 'No answer yet.'; return; }
-      if(picked.value === answers[q].ok){ score++; fs.classList.add('right'); fb.textContent = 'Correct. ' + answers[q].why; }
-      else { fs.classList.add('wrong'); fb.textContent = 'Not quite. ' + answers[q].why; }
+  /* ---- quiz terminal: a tiny fake bash shell that runs the quiz ---- */
+  (function(){
+    var out = document.getElementById('termOut'), form = document.getElementById('termForm');
+    var input = document.getElementById('termIn'), promptEl = document.getElementById('termPrompt');
+    var body = document.getElementById('termBody');
+    if(!out || !form) return;
+    var PS1 = 'aymen@portfolio:~/quiz$';
+    var CV = 'assets/Aymen-Kamel-CV.pdf', MAIL = 'kamelaymen793@gmail.com';
+    /* answers come from the content of this page */
+    var questions = [
+      {q:'Which model tracks the ball in SmartPlayAI?', o:['ResNet50', 'TrackNet', 'VGG16'], ok:1, why:'TrackNet follows the ball; YOLO handles the players.'},
+      {q:'Who co-founded HeroScore with Aymen?', o:['Racem Dammak', 'The Djagora team', 'Nobody, it is a solo project'], ok:0, why:'HeroScore was co-founded with Racem Dammak.'},
+      {q:'How does a MÉMORA gift open its video memory?', o:['With a password', 'With a USB key', 'With an NFC tap'], ok:2, why:'An NFC tap opens the memory, with a QR code as fallback.'},
+      {q:'What place did UtopiaHire take at TSYP13?', o:['1st', '3rd', '5th'], ok:1, why:'UtopiaHire took 3rd place at the TSYP13 national competition.'},
+      {q:'What test accuracy did the CNN classification project reach?', o:['78%', '86%', '94%'], ok:2, why:'VGG16 and ResNet50 transfer learning reached 94%.'}
+    ];
+    var verdicts = ['Time to scroll back up!', 'A quick skim, then.', 'Not bad.', 'Good reading.', 'Very close!', 'Perfect score. Let’s talk.'];
+    var mode = 'shell', qi = 0, score = 0, best = null, hist = [], hp = 0;
+
+    function line(text, cls){
+      var d = document.createElement('div');
+      d.className = 't-' + (cls || 'out');
+      d.textContent = text;
+      out.appendChild(d);
+      body.scrollTop = body.scrollHeight;
+    }
+    function lines(arr, cls){ arr.forEach(function(t){ line(t, cls); }); }
+    function echo(cmd){
+      var d = document.createElement('div'); d.className = 't-cmd';
+      var p = document.createElement('span'); p.className = 't-ps1'; p.textContent = promptEl.textContent + ' ';
+      d.appendChild(p); d.appendChild(document.createTextNode(cmd));
+      out.appendChild(d);
+    }
+    function setPrompt(){
+      promptEl.textContent = mode === 'quiz' ? '[' + (qi + 1) + '/' + questions.length + '] answer (a/b/c)>' : PS1;
+    }
+    function bar(n, t){
+      var w = 20, f = Math.round(w * n / t);
+      return '[' + new Array(f + 1).join('#') + new Array(w - f + 1).join('.') + '] ' + Math.round(100 * n / t) + '%';
+    }
+    function ask(){
+      var Q = questions[qi];
+      line('');
+      line('Q' + (qi + 1) + '. ' + Q.q, 'q');
+      Q.o.forEach(function(o, i){ line('   ' + 'abc'[i] + ') ' + o, 'opt'); });
+      setPrompt();
+    }
+    function start(){
+      mode = 'quiz'; qi = 0; score = 0;
+      lines(['$ ./quiz.sh', 'Loading 5 questions about this page... done.', "Answer with a, b or c. Type 'quit' to stop."], 'dim');
+      ask();
+    }
+    function finish(){
+      mode = 'shell';
+      best = best === null ? score : Math.max(best, score);
+      line('');
+      line('score: ' + score + '/' + questions.length + '  ' + bar(score, questions.length), score === questions.length ? 'ok' : 'hl');
+      line(verdicts[score], score === questions.length ? 'ok' : 'out');
+      line("Type 'start' to try again, or 'cat cv' to read the CV.", 'dim');
+      setPrompt();
+    }
+    function answer(raw){
+      var a = raw.toLowerCase(), Q = questions[qi], pick = -1;
+      if(a === 'quit' || a === 'exit' || a === 'q'){ mode = 'shell'; line('quiz aborted.', 'dim'); setPrompt(); return; }
+      if(/^[abc]\)?$/.test(a)) pick = 'abc'.indexOf(a.charAt(0));
+      else if(/^[123]$/.test(a)) pick = +a - 1;
+      else Q.o.forEach(function(o, i){ if(o.toLowerCase() === a) pick = i; });
+      if(pick < 0){ line("bash: please answer a, b or c (or 'quit').", 'err'); return; }
+      if(pick === Q.ok){ score++; line('✓ correct. ' + Q.why, 'ok'); }
+      else { line('✗ wrong, it was ' + 'abc'[Q.ok] + ') ' + Q.o[Q.ok] + '. ' + Q.why, 'err'); }
+      qi++;
+      if(qi < questions.length) ask(); else finish();
+    }
+
+    var cmds = {
+      help: function(){
+        lines([
+          'available commands:',
+          '  start      run the quiz (5 questions)',
+          '  score      show your best score',
+          '  whoami     who built this',
+          '  ls         list files   (try: ls projects)',
+          '  cat        read a file  (try: cat contact.txt, cat cv)',
+          '  history    commands you typed',
+          '  date, pwd, echo, clear'
+        ]);
+      },
+      start: start, quiz: start, './quiz.sh': start,
+      score: function(){ line(best === null ? "no score yet. Type 'start'." : 'best score: ' + best + '/' + questions.length + '  ' + bar(best, questions.length)); },
+      whoami: function(){ lines(['aymen kamel', 'AI engineer and full-stack developer, Sfax, Tunisia', 'open to alternance, internships and AI or software roles']); },
+      ls: function(args){
+        if(/^projects\/?$/.test(args)){ line(projects.map(function(p){ return p.n.replace(/\s+/g, '_'); }).join('  ')); return; }
+        line('quiz.sh  cv.pdf  contact.txt  projects/');
+      },
+      cat: function(args){
+        if(/^cv(\.pdf)?$/.test(args)){ line('opening cv.pdf in a new tab...', 'dim'); window.open(CV, '_blank', 'noopener'); return; }
+        if(/^contact(\.txt)?$/.test(args)){ lines(['email:    ' + MAIL, 'linkedin: linkedin.com/in/aymen-kamel-b135a3301', 'github:   github.com/aymen-kamel']); return; }
+        if(/^quiz\.sh$/.test(args)){ lines(['#!/bin/bash', '# 5 questions, answers hidden. Nice try.'], 'dim'); return; }
+        if(/^projects\/?$/.test(args)){ line('cat: projects/: Is a directory', 'err'); return; }
+        line('cat: ' + (args || '') + ': No such file or directory', 'err');
+      },
+      history: function(){ hist.forEach(function(h, i){ line('  ' + (i + 1) + '  ' + h); }); },
+      date: function(){ line(new Date().toString()); },
+      pwd: function(){ line('/home/aymen/quiz'); },
+      echo: function(args){ line(args); },
+      clear: function(){ out.textContent = ''; },
+      cd: function(){ line('cd: you are exactly where you should be.', 'dim'); },
+      exit: function(){ line('logout... just kidding, the terminal stays open.', 'dim'); },
+      sudo: function(args){
+        if(/^hire\s+aymen$/i.test(args)){ line('[sudo] access granted. Opening your mail client...', 'ok'); location.href = 'mailto:' + MAIL + '?subject=Let%27s%20work%20together'; return; }
+        line('aymen is not in the sudoers file. Try: sudo hire aymen', 'err');
+      },
+      rm: function(){ line('rm: permission denied. This portfolio is staying.', 'err'); }
+    };
+    var names = Object.keys(cmds);
+
+    function run(raw){
+      var cmd = raw.trim();
+      echo(raw);
+      if(!cmd) return;
+      hist.push(cmd); hp = hist.length;
+      if(mode === 'quiz'){ answer(cmd); return; }
+      var sp = cmd.indexOf(' ');
+      var name = (sp < 0 ? cmd : cmd.slice(0, sp)).toLowerCase(), args = sp < 0 ? '' : cmd.slice(sp + 1).trim();
+      if(cmds.hasOwnProperty(name)) cmds[name](args);
+      else line('bash: ' + name + ": command not found. Type 'help'.", 'err');
+    }
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var v = input.value; input.value = '';
+      run(v);
+      body.scrollTop = body.scrollHeight;
     });
-    quizScore.textContent = 'Score: ' + score + ' / ' + total + '. ' + verdicts[score] + (missing ? ' (' + missing + ' unanswered)' : '');
-  });
-  quiz.addEventListener('reset', function(){
-    Array.prototype.forEach.call(quiz.querySelectorAll('fieldset'), function(fs){
-      fs.classList.remove('right', 'wrong');
-      fs.querySelector('.fb').textContent = '';
+    input.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowUp' && hist.length){ e.preventDefault(); hp = Math.max(0, hp - 1); input.value = hist[hp]; }
+      else if(e.key === 'ArrowDown' && hist.length){ e.preventDefault(); hp = Math.min(hist.length, hp + 1); input.value = hist[hp] || ''; }
+      else if(e.key === 'Tab' && mode === 'shell' && input.value && input.value.indexOf(' ') < 0){
+        var m = names.filter(function(n){ return n.indexOf(input.value.toLowerCase()) === 0; });
+        if(m.length === 1){ e.preventDefault(); input.value = m[0] + ' '; }
+        else if(m.length > 1){ e.preventDefault(); echo(input.value); line(m.join('  ')); }
+      }
+      else if(e.key === 'l' && e.ctrlKey){ e.preventDefault(); out.textContent = ''; }
     });
-    quizScore.textContent = '';
-  });
+    /* clicking anywhere in the window focuses the prompt, unless you are selecting text */
+    document.getElementById('term').addEventListener('click', function(){
+      if(!String(window.getSelection && window.getSelection())) input.focus({preventScroll:true});
+    });
+
+    lines(['Last login: ' + new Date().toDateString() + ' on ttys001', "Welcome to aymen's portfolio shell.", "Type 'start' to take the quiz, or 'help' for every command."], 'dim');
+  })();
 })();
 
 /* Easter eggs: pure JS, no libraries */

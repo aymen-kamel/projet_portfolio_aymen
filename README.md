@@ -15,7 +15,7 @@ Source: https://github.com/aymen-kamel/projet_portfolio_aymen
 | Work | `details`/`summary`, `ul`, `noscript` | 11 projects built from a JS array, static fallback without JS |
 | About | `dl`, `table` (`caption`, `thead`, `tbody`, `th scope`), `figure` + `video` + `figcaption` | Stack table and a 10 s video of the portrait states |
 | Journey | `article`, `time`, `ul` | Experience, education, awards, leadership |
-| Quiz | `form`, `fieldset`, `legend`, radio inputs | 5 questions scored in JavaScript, with feedback per answer |
+| Quiz | `form`, `label`, `input`, `role="log"` output | A fake bash terminal: type `start` for 5 questions answered with a/b/c, scored in JavaScript with an ASCII progress bar. Also `help`, `whoami`, `ls projects`, `cat cv`, `cat contact.txt`, `history`, `clear`, `sudo hire aymen`; Tab completes, arrow keys recall history |
 | Contact | `form`, `label`, links, CV buttons | Open or save the CV PDF |
 
 All sections sit inside `<main>`; the footer sits outside it.
@@ -86,7 +86,7 @@ ffmpeg -framerate 24 -i frames/f%04d.png -c:v libx264 -pix_fmt yuv420p -crf 26 -
 
 - **Projects:** the `projects` array in the `<script>` at the bottom of `src/index.template.html`. Each entry has `n` (name), `t` (tag line), `d` (description), `chips`, and optional `pts` (bullet points), `links` and `open` (expanded by default). The first item gets the "Featured" label and the fourth starts "More work".
 - **Journey, About, Contact:** plain HTML sections in the template body.
-- **Quiz:** questions are plain HTML in the `#quiz` section; the correct answers and explanations are the `answers` object in the script. Keep both in sync.
+- **Quiz terminal:** questions, options, correct answer and explanation are the `questions` array in the "quiz terminal" block of the script; shell commands are the `cmds` object next to it. Add a command by adding a key to `cmds`.
 - **Styles:** edit `style.css` directly; it is not touched by `build.py`.
 - **No-JS fallback:** the `<noscript>` list under "Selected work" mirrors the projects array. Update both when you add or rename a project.
 - **Head metadata:** title, description, Open Graph and JSON-LD sit at the top of the template. The canonical and og URLs assume `https://aymenkamel.netlify.app/`. Change them if the domain changes, and update `sitemap.xml` and `robots.txt` too.

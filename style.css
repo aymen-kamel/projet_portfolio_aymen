@@ -183,17 +183,32 @@ summary:focus-visible .row{outline:2px solid var(--accent);outline-offset:-2px}
 .reel video{display:block;width:100%;max-width:960px;height:auto;border:1px solid var(--line);border-radius:18px;background:#000}
 .reel figcaption{margin-top:12px;color:var(--mute);font-size:14px;max-width:70ch}
 
-/* quiz */
-.quiz{display:grid;gap:18px;max-width:880px}
-.quiz fieldset{border:1px solid var(--line);border-radius:18px;padding:20px 22px;display:grid;gap:10px;transition:border-color .2s}
-.quiz legend{padding:0 8px;margin-left:-8px;font:700 clamp(17px,1.6vw,21px)/1.25 var(--display)}
-.quiz label{display:flex;gap:10px;align-items:center;cursor:pointer;color:#c8c4bc;padding:4px 0}
-.quiz label:hover{color:var(--fg)}
-.quiz input{accent-color:var(--accent);width:18px;height:18px}
-.quiz .fb{min-height:1.3em;font-size:14px;color:var(--mute)}
-.quiz fieldset.right{border-color:#3bb273}
-.quiz fieldset.right .fb{color:#5fd08f}
-.quiz fieldset.wrong{border-color:var(--accent)}
-.quiz fieldset.wrong .fb{color:var(--accent)}
-.quiz-actions{display:flex;flex-wrap:wrap;gap:12px}
-.quiz-score{font:800 clamp(22px,2.6vw,34px)/1.1 var(--display);text-transform:uppercase;letter-spacing:-.01em;min-height:1.1em}
+/* quiz terminal */
+.term{max-width:900px;border:1px solid #2e2b26;border-radius:14px;overflow:hidden;background:#0b0b0a;box-shadow:0 30px 80px -30px rgba(255,90,31,.25);font:400 15px/1.55 ui-monospace,'SFMono-Regular','Cascadia Code',Consolas,'Liberation Mono',monospace;cursor:text}
+.term-bar{display:flex;align-items:center;gap:8px;padding:11px 14px;background:#161513;border-bottom:1px solid #2e2b26}
+.term-bar i{width:12px;height:12px;border-radius:50%;background:#ff5f57}
+.term-bar i:nth-child(2){background:#febc2e}
+.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{flex:1;text-align:center;margin-right:52px;color:#8f8b84;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.term-body{height:clamp(320px,52vh,460px);overflow-y:auto;padding:16px 18px 18px;scrollbar-width:thin;scrollbar-color:#3a3730 transparent}
+.term-out>div{white-space:pre-wrap;overflow-wrap:anywhere;min-height:1.55em}
+.t-out{color:#d9d5cd}
+.t-dim{color:#8f8b84}
+.t-cmd{color:var(--fg)}
+.t-ps1,.term-prompt{color:#28c840}
+.t-q{color:var(--fg);font-weight:700}
+.t-opt{color:#c8c4bc}
+.t-ok{color:#5fd08f}
+.t-err{color:#ff7b5c}
+.t-hl{color:var(--accent);font-weight:700}
+.term-line{display:flex;gap:10px;align-items:baseline}
+.term-prompt{flex:none;white-space:nowrap}
+.term-in{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--fg);font:inherit;caret-color:var(--accent);padding:0}
+.term:focus-within{border-color:#4a463e}
+.term-help{margin-top:14px;color:var(--mute);font-size:14px;max-width:70ch}
+.term-help code,.label code{font-family:ui-monospace,Consolas,monospace;color:var(--accent);text-transform:none}
+@media (max-width:560px){
+  .term{font-size:13px;border-radius:10px}
+  .term-body{padding:12px;height:60vh}
+  .term-bar span{margin-right:0}
+}
