@@ -175,8 +175,8 @@
 </section>
 
 <section class="block" id="quiz" style="padding-top:0" aria-labelledby="quiz-title">
-  <div class="label"><span>Quiz</span><span>Type <code>start</code></span></div>
-  <h2 id="quiz-title">How well were you reading?</h2>
+  <div class="label"><span>Tech quiz</span><span>Type <code>start</code></span></div>
+  <h2 id="quiz-title">Do you speak my stack?</h2>
   <div class="term" id="term">
     <div class="term-bar" aria-hidden="true"><i></i><i></i><i></i><span>aymen@portfolio: ~/quiz &mdash; bash</span></div>
     <div class="term-body" id="termBody">
@@ -187,7 +187,7 @@
       </form>
     </div>
   </div>
-  <p class="term-help" id="termHelp">Type <code>start</code> to take the 5-question quiz, or <code>help</code> to list every command. Answer with a, b or c. Arrow keys recall past commands.</p>
+  <p class="term-help" id="termHelp">Type <code>start</code> for 5 random questions on the tech I use (computer vision, AI, web), or <code>help</code> to list every command. Answer with a, b or c. Arrow keys recall past commands.</p>
   <noscript><p class="term-help">The quiz terminal needs JavaScript.</p></noscript>
 </section>
 
@@ -569,14 +569,28 @@
     if(!out || !form) return;
     var PS1 = 'aymen@portfolio:~/quiz$';
     var CV = 'assets/Aymen-Kamel-CV.pdf', MAIL = 'kamelaymen793@gmail.com';
-    /* answers come from the content of this page */
-    var questions = [
-      {q:'Which model tracks the ball in SmartPlayAI?', o:['ResNet50', 'TrackNet', 'VGG16'], ok:1, why:'TrackNet follows the ball; YOLO handles the players.'},
-      {q:'Who co-founded HeroScore with Aymen?', o:['Racem Dammak', 'The Djagora team', 'Nobody, it is a solo project'], ok:0, why:'HeroScore was co-founded with Racem Dammak.'},
-      {q:'How does a MÉMORA gift open its video memory?', o:['With a password', 'With a USB key', 'With an NFC tap'], ok:2, why:'An NFC tap opens the memory, with a QR code as fallback.'},
-      {q:'What place did UtopiaHire take at TSYP13?', o:['1st', '3rd', '5th'], ok:1, why:'UtopiaHire took 3rd place at the TSYP13 national competition.'},
-      {q:'What test accuracy did the CNN classification project reach?', o:['78%', '86%', '94%'], ok:2, why:'VGG16 and ResNet50 transfer learning reached 94%.'}
+    /* tech quiz: a pool of questions on the techniques used in these projects; each run asks 5 at random */
+    var ROUND = 5;
+    var pool = [
+      {q:'What does YOLO stand for in object detection?', o:['You Only Look Once', 'Your Object Locator Online', 'Yield-Optimised Layer Output'], ok:0, why:'YOLO predicts every box and class in a single forward pass, which is why it runs in real time. Used for player detection in SmartPlayAI.'},
+      {q:'In object detection, what does IoU (Intersection over Union) measure?', o:['How fast the model runs', 'How much a predicted box overlaps the true box', 'How many classes the model knows'], ok:1, why:'IoU = overlap area / union area. It decides whether a detection counts as correct, and it drives NMS.'},
+      {q:'What does Non-Maximum Suppression (NMS) do?', o:['Removes duplicate overlapping boxes, keeping the most confident one', 'Blurs the background of the frame', 'Lowers the learning rate during training'], ok:0, why:'A detector fires several boxes on the same player; NMS keeps the best one and drops boxes with high IoU against it.'},
+      {q:'Why does TrackNet take several consecutive frames as input?', o:['To make the video smaller', 'To colour-correct the frames', 'A small, fast ball is blurry in one frame; motion across frames reveals it'], ok:2, why:'TrackNet outputs a heatmap of the ball position from a short frame sequence. Used for ball tracking in SmartPlayAI.'},
+      {q:'What is a homography used for in sports video analysis?', o:['Compressing the video stream', 'Mapping image pixels onto the flat court to get real positions', 'Detecting the players\u2019 faces'], ok:1, why:'Four or more court corners give a 3x3 matrix that turns camera pixels into a top-down court view, so distances and zones become measurable.'},
+      {q:'In transfer learning with VGG16 or ResNet50, what do you usually do?', o:['Train the whole network from random weights', 'Remove every convolution layer', 'Start from ImageNet weights and fine-tune the top layers'], ok:2, why:'Pretrained features already know edges and textures, so a small dataset is enough. That is how the CNN project reached 94%.'},
+      {q:'What does RAG (Retrieval-Augmented Generation) add to an LLM?', o:['More parameters inside the model', 'Relevant documents retrieved and placed in the prompt', 'A faster GPU'], ok:1, why:'The answer is grounded in your own documents and can cite them, without retraining the model. Used in Document RAG Chat.'},
+      {q:'Why do RAG systems split documents into chunks before embedding them?', o:['So each piece fits the context and matches a precise question', 'To encrypt the documents', 'Because PDFs cannot be read whole'], ok:0, why:'Chunk size and overlap trade recall against noise; that trade-off is exactly what RAG Research Lab benchmarks.'},
+      {q:'What do vector embeddings make possible in semantic search?', o:['Exact keyword matching only', 'Finding text by meaning, using distances such as cosine similarity', 'Sorting results alphabetically'], ok:1, why:'Similar meanings land close together in vector space, so "court position" can match "where the player stands".'},
+      {q:'What lets FastAPI serve many requests at once?', o:['It compiles Python to C', 'It caches every response in the browser', 'Async endpoints running on an ASGI server such as Uvicorn'], ok:2, why:'While one request waits on I/O, the event loop serves others. The Player Detection API is built this way.'},
+      {q:'How does a Docker container differ from a virtual machine?', o:['It shares the host kernel instead of booting a full OS', 'It always needs its own hardware', 'It can only run Windows programs'], ok:0, why:'Containers start in seconds and ship the same environment from laptop to server, which is why the AI services are containerised.'},
+      {q:'In React, what makes a component re-render?', o:['Only a full page reload', 'A change in its state or props', 'Scrolling the page'], ok:1, why:'React re-runs the component when its state or props change and updates only the DOM nodes that differ. Used for the SmartPlayAI dashboard.'}
     ];
+    var questions = [];
+    function pick(){
+      var a = pool.slice();
+      for(var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), x = a[i]; a[i] = a[j]; a[j] = x; }
+      return a.slice(0, ROUND);
+    }
     var verdicts = ['Time to scroll back up!', 'A quick skim, then.', 'Not bad.', 'Good reading.', 'Very close!', 'Perfect score. Let’s talk.'];
     var mode = 'shell', qi = 0, score = 0, best = null, hist = [], hp = 0;
 
@@ -609,8 +623,8 @@
       setPrompt();
     }
     function start(){
-      mode = 'quiz'; qi = 0; score = 0;
-      lines(['$ ./quiz.sh', 'Loading 5 questions about this page... done.', "Answer with a, b or c. Type 'quit' to stop."], 'dim');
+      mode = 'quiz'; qi = 0; score = 0; questions = pick();
+      lines(['$ ./quiz.sh', 'Loading ' + ROUND + ' random questions from ' + pool.length + ' on the tech I use... done.', "Answer with a, b or c. Type 'quit' to stop."], 'dim');
       ask();
     }
     function finish(){
@@ -639,7 +653,7 @@
       help: function(){
         lines([
           'available commands:',
-          '  start      run the quiz (5 questions)',
+          '  start      run the tech quiz (' + ROUND + ' random questions)',
           '  score      show your best score',
           '  whoami     who built this',
           '  ls         list files   (try: ls projects)',
@@ -649,7 +663,7 @@
         ]);
       },
       start: start, quiz: start, './quiz.sh': start,
-      score: function(){ line(best === null ? "no score yet. Type 'start'." : 'best score: ' + best + '/' + questions.length + '  ' + bar(best, questions.length)); },
+      score: function(){ line(best === null ? "no score yet. Type 'start'." : 'best score: ' + best + '/' + ROUND + '  ' + bar(best, ROUND)); },
       whoami: function(){ lines(['aymen kamel', 'AI engineer and full-stack developer, Sfax, Tunisia', 'open to alternance, internships and AI or software roles']); },
       ls: function(args){
         if(/^projects\/?$/.test(args)){ line(projects.map(function(p){ return p.n.replace(/\s+/g, '_'); }).join('  ')); return; }
@@ -658,7 +672,7 @@
       cat: function(args){
         if(/^cv(\.pdf)?$/.test(args)){ line('opening cv.pdf in a new tab...', 'dim'); window.open(CV, '_blank', 'noopener'); return; }
         if(/^contact(\.txt)?$/.test(args)){ lines(['email:    ' + MAIL, 'linkedin: linkedin.com/in/aymen-kamel-b135a3301', 'github:   github.com/aymen-kamel']); return; }
-        if(/^quiz\.sh$/.test(args)){ lines(['#!/bin/bash', '# 5 questions, answers hidden. Nice try.'], 'dim'); return; }
+        if(/^quiz\.sh$/.test(args)){ lines(['#!/bin/bash', '# ' + pool.length + ' questions on CV, AI and web tech. Answers hidden. Nice try.'], 'dim'); return; }
         if(/^projects\/?$/.test(args)){ line('cat: projects/: Is a directory', 'err'); return; }
         line('cat: ' + (args || '') + ': No such file or directory', 'err');
       },
